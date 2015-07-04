@@ -1,13 +1,14 @@
 #include "BattleScene.h"
 #include "EndScene.h"
+#include "Stage/Level.h"
 
 USING_NS_CC;
 
 Scene* BattleScene::createScene(){
-    auto scene = Scene::create(); //auto-release
 	auto layer = BattleScene::create(); //auto-release
-    scene->addChild(layer);
-    return scene;
+	auto layer2 = Level::createSceneWithMap("map2.tmx");
+	layer2->addChild(layer, 1);
+	return layer2;
 }
 void BattleScene::nextWinScene(Ref* pSender){
 	auto director = Director::getInstance();
@@ -59,11 +60,6 @@ bool BattleScene::init(){
     label->setPosition(Vec2(origin.x + visibleSize.width/2,
                             origin.y + visibleSize.height - label->getContentSize().height));
     this->addChild(label, 1);
-
-	//SPRITE
-    auto sprite = Sprite::create("HelloWorld.png");
-    sprite->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
-    this->addChild(sprite, 0);
     
     return true;
 }
