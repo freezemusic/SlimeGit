@@ -1,38 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="110" height="15" tilewidth="70" tileheight="70" nextobjectid="37">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="200" height="15" tilewidth="70" tileheight="70" nextobjectid="57">
  <tileset firstgid="1" name="tileset_forTiled" tilewidth="70" tileheight="70" spacing="2" margin="2">
   <image source="Kenney Platformer Base Pack for Tiled/tileset_forTiled.png" width="1024" height="1024"/>
  </tileset>
- <layer name="Tile Layer 1" width="110" height="15">
+ <layer name="Tile Layer 1" width="200" height="15">
   <data encoding="base64" compression="zlib">
-   eJztlksKwjAQhnMG9Sai+5xBD1R03wO478ZTmkAGYpxHH5PU6nzw001CoR//TJ0zDEPiFHLMckXOXIozWIx2RGfnEJ+Fwgsx2gDO+hSfnhTmbV1gLkLPwNlcb3DfqAPlq3fvnaMoPVnf6nMLubtPV5gHCpuTekQf3YiAs9IR1h0Kaj6at2nkHZqacj7mDijW6NsuZJ9yqPSOlixxhrmy/8n6LHWGzbu53sb0VCLv1JZ7Je0sjZ5xLim4ncj5/lVKTzW8cPNRa78NzN2n/Bk2hdae0gyF9D/Z/VG+zVnMgwjXtXjvBUnYyIU=
+   eJztmE1OwzAQRn0GQJwAduwqWCCBlGWXUA5U0X0PwI4FQvQSbHowbCmWpmbGP4nd2Mn3pKc2re1Itb+OHaUAAAAsiXvtivjGtNk4bTgBmBsmGw/ajijRBQRgTths7Hu7/lUC+QBLwO6nbN2w2RiaD9sfgJaRcrFXpzVEws0D6geYC+/anfqfCW69S2B/BVrDrPtthDYbbha4WiAh7avOnY/fM94LtAutCam6+yq61iWmqB9r4hPxudD9lsqF9rL3ynnfImOywWUCz6+Aj9A6qomx2eD2SUPzEVN3QqwZgVI/mcejNSK1NtSUj9CZIkfd8GVGwndmKfUbXRcadyhmbj7J9Yv21bleMZ/R6xAHYi1MmQ83DyXWv29flfP88SX05eY6Zv5vItoYbkd+7yL9R+0Sx0nlIMi1ix0vB1PlI9c5IqcfgqHnV3eV+5igb06OGdw2ZmjNlLpvbdkwfgv6aofp9wdzuBSG
   </data>
  </layer>
  <objectgroup name="collision">
   <properties>
    <property name="collidable" value="true"/>
   </properties>
-  <object id="9" x="4128" y="976">
-   <polyline points="0,0 142,-138 348,-140 420,-208 910,-208 1190,-484 1816,-484 1956,-624 2026,-626 2100,-694 2168,-698 2380,-904 2660,-906 2662,-882 2612,-836 2594,-836 2592,70 4,74 -4128,72 -4126,2 63,-1"/>
-  </object>
-  <object id="18" x="981.333" y="772" width="348" height="37.3333"/>
-  <object id="19" x="1470.67" y="630.667" width="278.667" height="37.3333"/>
-  <object id="20" x="7072" y="72">
-   <polyline points="0,0 0,26 64,66 66,976 624,970 624,-10 -2,0"/>
-  </object>
-  <object id="27" x="490" y="910" width="70" height="70"/>
  </objectgroup>
  <objectgroup name="start">
-  <object id="29" name="start" x="70" y="910" width="70" height="70"/>
+  <object id="30" x="140" y="910" width="70" height="70"/>
  </objectgroup>
- <objectgroup name="Player">
-  <properties>
-   <property name="initVel" value="0,100"/>
-  </properties>
-  <object id="36" name="Player" type="Player" gid="38" x="83.1818" y="753.182" width="70" height="70">
-   <properties>
-    <property name="initVel" value="0,100"/>
-   </properties>
-  </object>
+ <objectgroup name="enermy">
+  <object id="32" x="1610" y="560" width="70" height="70"/>
+  <object id="33" x="1820" y="910" width="70" height="70"/>
+  <object id="34" x="2870" y="910" width="70" height="70"/>
+  <object id="35" x="2310" y="910" width="70" height="70"/>
+  <object id="36" x="4620" y="770" width="70" height="70"/>
+  <object id="37" x="6160" y="910" width="70" height="70"/>
+  <object id="38" x="11900" y="280" width="210" height="210"/>
+  <object id="39" x="11130" y="700" width="70" height="70"/>
+  <object id="40" x="10920" y="700" width="70" height="70"/>
+  <object id="41" x="9380" y="910" width="70" height="70"/>
+  <object id="42" x="9870" y="910" width="70" height="70"/>
+  <object id="44" x="7980" y="560" width="70" height="70"/>
+  <object id="45" x="7420" y="700" width="70" height="70"/>
+  <object id="46" x="8540" y="630" width="70" height="70"/>
+  <object id="47" x="8050" y="910" width="70" height="70"/>
+  <object id="48" x="1050" y="700" width="70" height="70"/>
+  <object id="51" x="6930" y="910" width="70" height="70"/>
+  <object id="56" x="13720" y="0" width="70" height="70"/>
  </objectgroup>
 </map>
