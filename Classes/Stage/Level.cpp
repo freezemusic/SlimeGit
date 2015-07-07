@@ -6,6 +6,8 @@
 #include "Level.h"
 #include "LevelObject.h"
 #include "Player.h"
+#include "../Panel/GamePanel.h"
+#include "CCSoftFollow.h"
 
 USING_NS_CC;
 
@@ -15,28 +17,54 @@ Level::Level(){
 
 Scene* Level::createScene(){
 	auto scene = Scene::createWithPhysics();
-	auto layer = Level::create();
-	layer->world = scene->getPhysicsWorld();
-	layer->world->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
-	scene->addChild(layer);
+
+	auto panel = GamePanel::createLayer();
+	scene->addChild(panel, 1, panelTag); //SCENE { panel }
+
+	auto level = Level::create();
+	scene->addChild(level, 0, levelTag); //SCENE { level }
+
 	return scene;
 }
 Scene* Level::createSceneWithMap(std::string mapPath){
-	auto scene = Scene::createWithPhysics();
-	auto layer = Level::create();
-	layer->world = scene->getPhysicsWorld();
-	layer->world->setGravity(Vec2(0.0f, -980.0f));
-	layer->world->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
-	layer->map = TMXTiledMap::create(mapPath);
-	//ANTI-ALIASED
-	for (const auto& child : layer->map->getChildren()){
+	auto scene = Level::createScene();
+	auto level = (Level*)(scene->getChildByTag(levelTag));
+	level->createLevel(mapPath);
+	return scene;
+}
+
+//LEVEL SETUP
+void Level::createLevel(std::string mapPath){
+	//PHYSICS WORLD SETUP
+	world = getScene()->getPhysicsWorld();
+	world->setGravity(Vec2(0.0f, -980.0f));
+	world->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+	//PARALLAX-MAP SETUP
+	auto parallax = createParallax(mapPath);
+	addChild(parallax); //SCENE { level { parallax { map } }
+	//TILED MAP PARSING
+	prepareLayers();
+	addObjects(); //SCENE { level {  parallax { player } } }
+}
+//PARALLAX SETUP
+ParallaxNode* Level::createParallax(std::string mapPath){
+	auto parallax = ParallaxNode::create();
+	parallax->setName("Parallax");
+	parallax->setAnchorPoint(Vec2(0.5f, 0.5f));
+	//SKY(-2)
+	auto sky = CCSprite::create("bg.png");
+	sky->setScale(0.7f);
+	sky->setAnchorPoint(Vec2(0, 0));
+	parallax->addChild(sky, -2, Vec2(0.1f, 0.1f), Vec2::ZERO);
+	//MAP(0)
+	map = TMXTiledMap::create(mapPath);
+	map->setName("Map");
+	for (const auto& child : map->getChildren()){
 		static_cast<SpriteBatchNode*>(child)->getTexture()->setAntiAliasTexParameters();
 	}
-	layer->addChild(layer->map);
-	layer->prepareLayers();
-	layer->addObjects();
-	scene->addChild(layer);
-	return scene;
+	parallax->addChild(map, 0, Vec2::ONE, Vec2::ZERO);
+
+	return parallax;
 }
 
 //PARSE ALL FIXTURES
@@ -62,13 +90,14 @@ void Level::createFixtures(TMXLayer* layer){
 }
 void Level::createRectFixture(TMXLayer* layer, Sprite* spr){
 	//TILE SIZE CALCULATION
-	auto tileSize = this->map->getTileSize();
+	auto tileSize = map->getTileSize();
 	const float ppm = 32.0f; //pixel per meter
 
 	//PHYSICS BODY
 	auto body = PhysicsBody::createBox(Size(tileSize.width, tileSize.width));
 	body->setDynamic(false);
 	body->setMass(PHYSICS_INFINITY);
+	body->setContactTestBitmask(0xFFFFFFFF);
 	spr->setPhysicsBody(body);
 }
 
@@ -90,8 +119,10 @@ void Level::addObjects(){
 }
 void Level::addObject(std::string className, ValueMap& prop){
 	LevelObject* obj = nullptr;
-	if (className == "Player")
+	if (className == "Player"){
 		obj = new Player;
+		setGamePanelOnPlayer((Player*)obj);
+	}
 	//else if (className == "Monster")
 	//	obj = new Monster;
 
@@ -99,10 +130,32 @@ void Level::addObject(std::string className, ValueMap& prop){
 		obj->setProperties(prop);
 		obj->addSpriteToLevel(this);
 		obj->addBody();
-		//obj->addFixtures();
 	}
+}
+void Level::setGamePanelOnPlayer(Player* player){
+	auto panel = (GamePanel*)(getScene()->getChildByTag(panelTag));
+	panel->setPlayer(player);
+}
+Rect Level::scaleRect(Rect& rect, float scale){
+	float mul = scale;
+	float mulN = 1 - mul;
+	float minX = rect.getMinX()*mulN;
+	float minY = rect.getMinY()*mulN;
+	float maxX = rect.getMaxX()*mul;
+	float maxY = rect.getMaxY()*mul;
+	return Rect(minX, minY, maxX-minX, maxY-minY);
 }
 
 void Level::update(float dt){
-
+	auto panel = (GamePanel*)(getScene()->getChildByTag(panelTag));
+	auto player = panel->getPlayer();
+	if (player){
+		player->update();
+		updateCameraOnPlayer(player);
+	}
+}
+void Level::updateCameraOnPlayer(Player* player){
+	auto sight = player->getEntitySight();
+	auto camera = Follow::create(sight);
+	map->getParent()->runAction(camera);
 }

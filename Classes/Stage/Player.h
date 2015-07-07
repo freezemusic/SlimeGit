@@ -12,16 +12,23 @@ class Player : public LevelObject{
 private:
 	typedef LevelObject super;
 	typedef Player self;
+	Action* normalAnimation;
+	bool isGround = false;
 public:
-	//Player();
-	//virtual ~Player();
-
-	//void setProperties(ValueMap& prop);
 	SpriteBatchNode* createBatch();
 	Sprite* createSprite();
 	void addSpriteToLevel(Level* const& level);
 	void addBody();
-	//void addFixtures();
+
+	void move(Vec2& vec);
+	void readyToJump(Vec2& vec);
+	void rest();
+	void jumping();
+
+	void update();
+
+	bool onContactPreSolve(PhysicsContact& contact, PhysicsContactPreSolve& solve);
+	void onContactSeperate(PhysicsContact& contact);
 
 	CREATE_FUNC(Player);
 };
